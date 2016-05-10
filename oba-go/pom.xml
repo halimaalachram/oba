@@ -81,5 +81,11 @@
             <version>1.4-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.sqlite</groupId>
+            <artifactId>jdbc_3.8.11.2</artifactId>
+            <version>3.8.11.2</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>
