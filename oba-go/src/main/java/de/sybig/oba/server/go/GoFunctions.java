@@ -4,6 +4,7 @@
  */
 package de.sybig.oba.server.go;
 
+import de.sybig.oba.server.JsonEntity;
 import de.sybig.oba.server.HtmlBase;
 import de.sybig.oba.server.OntologyFunction;
 import de.sybig.oba.server.OntologyFunctions;
@@ -79,7 +80,7 @@ public class GoFunctions extends OntologyFunctions implements
             log.error("INVALID SPECIE");
             return null;
         }
-
+        
         list = retrieveGeneByID(geneEnsID);
         if (list == null) {
             return null;
@@ -91,9 +92,8 @@ public class GoFunctions extends OntologyFunctions implements
                 if (!outList.contains(cls)) {
                     outList.add(cls);
                 }
-            }
+            }log.info("Getting the list GO classes for the corresponding ENSEMBL gene ID " + geneEnsID + "\n");
         }
-
         return outList;
 
     }

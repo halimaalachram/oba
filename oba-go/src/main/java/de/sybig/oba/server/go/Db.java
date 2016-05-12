@@ -25,9 +25,9 @@ public class Db {
 
     public static void connect(String urlDB, String driver) throws SQLException {
         try {
-            System.out.println("Loading driver...");
+            log.info("Loading driver...");
             Class.forName(driver).newInstance();
-            System.out.println("Driver loaded!");
+            log.info("Driver loaded!");
         } catch (ClassNotFoundException e) {
             log.error("Cannot find the driver in the classpath!");
             e.printStackTrace();
@@ -39,14 +39,14 @@ public class Db {
             log.error("IllegalAccessException");
             e.printStackTrace();
         }
-        System.out.println("Connecting to database...");
+        log.info("Connecting to database...");
         try {
             connection = DriverManager.getConnection(urlDB);
         } catch (SQLException e) {
             log.error("Failed to connect to Database!!");
             e.printStackTrace();
         }
-        System.out.println("Database connected!");
+        log.info("Database connected!");
     }
 
     public static ResultSet doQuery(String query) throws SQLException {
