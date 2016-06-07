@@ -8,7 +8,7 @@ import de.sybig.oba.server.JsonEntity;
 import de.sybig.oba.server.HtmlBase;
 import de.sybig.oba.server.OntologyFunction;
 import de.sybig.oba.server.OntologyFunctions;
-import static de.sybig.oba.server.go.Db.isValidEnsID;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -19,6 +19,7 @@ import javax.ws.rs.*;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import de.sybig.oba.server.go.Db;
 
 public class GoFunctions extends OntologyFunctions implements
         OntologyFunction {
@@ -75,16 +76,16 @@ public class GoFunctions extends OntologyFunctions implements
         StringBuffer out = new StringBuffer();
         List<OWLClass> outList = new LinkedList<OWLClass>();
         Vector<String> list = new Vector<String>();
-        String specie = Db.findSpecieFromID(geneEnsID);
+        Db db=new Db();
+        String specie = db.findSpecieFromID(geneEnsID);
         if (specie == null) {
-            log.error("INVALID SPECIE");
-            return null;
+            log.error("INVALID SPECIES");
+            throw new WebApplicationException(404);
+           
         }
-        
-        list = retrieveGeneByID(geneEnsID);
-        if (list == null) {
-            return null;
-        } else {
+        db.connect(goProps.getProperty("urlDB"), goProps.getProperty("driver"));
+        list = db.retrieveGeneByID(geneEnsID);
+        if (list!=null){
             out.append("<h1>The list of GO classes for the corresponding ENSEMBL Gene ID " + geneEnsID + "</h1>\n");
             out.append("<dl>");
             for (int i = 0; i < list.size(); i++) {
@@ -92,27 +93,11 @@ public class GoFunctions extends OntologyFunctions implements
                 if (!outList.contains(cls)) {
                     outList.add(cls);
                 }
-            }log.info("Getting the list GO classes for the corresponding ENSEMBL gene ID " + geneEnsID + "\n");
+            }
         }
         return outList;
 
     }
 
-    public Vector retrieveGeneByID(String geneEnsID) throws SQLException {
-        Vector<String> list = new Vector<String>();
-        String sp = Db.findSpecieFromID(geneEnsID);
-        if (sp == null) {
-            log.error("INVALID SPECIE");
-            return null;
-        }
-        Db.connect(goProps.getProperty("urlDB"), goProps.getProperty("driver"));
-        if (!isValidEnsID(geneEnsID, sp)) {
-            return null;
-        } else {
-            list = Db.getGOID(geneEnsID, sp);
-        }
-        Db.close();
-        return list;
-
-    }
+   
 }
