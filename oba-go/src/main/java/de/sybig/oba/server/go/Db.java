@@ -157,7 +157,5 @@ class Db {
     public Connection getConnection() {
         return connection;
     }
-//    public void setConnection(Connection connection) {
-//        Db.connection = connection;
-//    }
+
 }
